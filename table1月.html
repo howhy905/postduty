@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel-Like Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        header {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        section {
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            text-align: center;
+            padding: 8px;
+        }
+        #query-section {
+            float: right;
+            width: 30%;
+            margin-top: 20px;
+        }
+        #query-section h3 {
+            color: yellow; 
+        }
+        #input-section h3 {
+            color: yellow;
+        }
+        select, button {
+            margin: 5px;
+            padding: 1px;
+            font-size: 10px;
+        }
+        #log-section {
+         display: block; /* 確保這部分是顯示的 */
+        }
+
+        #table-section h3 {
+            color: yellow;
+        }
+        #log-section h3 {
+            color: yellow;
+        }
+        #table-section table {
+            font-size: 12px; /* Reduced font size for logs */
+        }
+        #log-section table {
+            font-size: 12px; /* Reduced font size for logs */
+        }
+        /* Ensure the delete button and password input align properly */
+       #log-section button {
+        margin-right: 5px; /* Space between button and input */
+        }
+
+        .passwordInput {
+         width: 50px; /* Adjust width of password input */
+        padding: 5px;
+        }
+
+        .red {
+            color: red;
+        }
+        .brown {
+            color: brown;
+        }
+        .green {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <header>班表</header>
+
+    <section id="query-section">
+        <h3>查詢當日誰休息</h3>
+        <label for="query-item-id">日期:</label>
+        <input type="text" id="query-item-id" onchange="queryData()" placeholder="輸入日期 (例如: 1)" />
+        <br><br>
+        <div id="query-results" style="margin-top: 10px;"></div>
+    </section>
+    <section id="input-section">
+        <h3>更改班別</h3>
+        <label for="user-id">大師:</label>
+        <select id="user-id">
+            <option value="熊">熊</option>
+            <option value="勝">勝</option>
+            <option value="忠">忠</option>
+            <option value="王">王</option>
+            <option value="蕭">蕭</option>
+            <option value="黃">黃</option>
+            <option value="珈">珈</option>
+            <option value="傅">傅</option>
+            <option value="婷">婷</option>
+            <option value="桂">桂</option>
+            <option value="何">何</option>
+            <option value="偉">偉</option>
+            <option value="李">李</option>
+            <option value="鍾">鍾</option>
+            <option value="潘">潘</option>
+            <option value="邱">邱</option>
+            <option value="程">程</option>
+            <option value="伶">伶</option>
+            <option value="陳">陳</option>
+            <option value="誼">誼</option>
+            <option value="妙">妙</option>
+        </select>
+        <label for="item-id">日期:</label>
+        <select id="item-id">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="27">27</option>
+        </select>
+        <label for="data-value">班別:</label>
+        <select id="data-value">
+            <option value="N">N</option>
+            <option value="N1" style="color: red;">N1</option>
+            <option value="P4" style="color: red;">P4</option>
+            <option value="R" style="color: red;">R</option>
+            <option value="N9" style="color: greenyellow;">N9</option>
+            <option value="N6" style="color: green">N6</option>
+         </select>
+        <button onclick="updateTable()">確定</button>
+    </section>
+
+    <section id="table-section">
+        <h3>更改後班表</h3>
+        <table id="data-table">
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th></th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th></th>
+                    <th>6</th>
+                    <th>7</th>
+                    <th>8</th>
+                    <th>9</th>
+                    <th>10</th>
+                    <th>11</th>
+                    <th></th>
+                    <th>13</th>
+                    <th>14</th>
+                    <th>15</th>
+                    <th>16</th>
+                    <th>17</th>
+                    <th>18</th>
+                    <th></th>
+                    <th>20</th>
+                    <th>21</th>
+                    <th>22</th>
+                    <th>23</th>
+                    <th>24</th>
+                    <th>25</th>
+                    <th></th>
+                    <th>27</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>熊</td>
+                    <th></th>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>勝</td>
+                    <th></th>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>忠</td>
+                    <th></th>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>王</td>
+                    <th></th>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>   
+                <tr>
+                    <td>蕭</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>黃</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>珈</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>傅</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>    
+                <tr>
+                    <td>婷</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>桂</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>何</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>偉</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>   
+                <tr>
+                    <td>李</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>鍾</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>潘</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>邱</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>    
+                <tr>
+                    <td>程</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>   
+                <tr>
+                    <td>伶</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>陳</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>誼</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>
+                <tr>
+                    <td>妙</td>
+                    <th></th> 
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>N</td>
+                    <td>R</td>
+                    <td></td>
+                    <td>N</td>
+                </tr>            
+            </tbody>
+        </table>
+    </section>
+
+    <section id="log-section">
+        <h3>每筆輸入記錄</h3>
+        <table id="log-table">
+            <thead>
+                <tr>
+                    <th>輸入時間</th>
+                    <th>大師</th>
+                    <th>日期</th>
+                    <th>班別</th>
+                    <th>刪除</th>
+                </tr>
+            </thead>
+            <tbody id="logBody">
+                 <!-- Log entries will be added here -->
+            </tbody>
+
+        </table>
+    </section>
+
+  <script>
+    function queryData() {
+    const queryDate = document.getElementById('query-item-id').value.trim();
+    const resultsContainer = document.getElementById('query-results');
+
+    // Clear previous results
+    resultsContainer.innerHTML = '';
+
+    // If no date is entered, return early
+    if (!queryDate) {
+        resultsContainer.innerHTML = '請輸入日期';
+        return;
+    }
+
+    const table = document.getElementById('data-table');
+    const rows = table.rows;
+
+    let foundUsers = [];
+
+    // Check each user on the given date
+    for (let i = 1; i < rows.length; i++) { // Skip header row
+        const userCell = rows[i].cells[0]; // First cell is the user's name
+        const userName = userCell.textContent.trim();
+        const dateCell = rows[i].cells[parseInt(queryDate)]; // Get the relevant date cell
+        
+        // Check if the user has 'R', 'N1' or 'P4' for the selected date
+        const classesForDate = ['R', 'N1', 'P4'];
+        if (dateCell && classesForDate.includes(dateCell.textContent.trim())) {
+            foundUsers.push(userName);
+        }
+    }
+
+    // Display the results or show "No one is resting on that day"
+    if (foundUsers.length > 0) {
+        resultsContainer.innerHTML = `以下使用者在 ${queryDate} 日休息: <br>${foundUsers.join(' | ')}`;
+    } else {
+        resultsContainer.innerHTML = `當日無人休`;
+    }
+}
+
+      
+     function updateTable() {
+        const userId = document.getElementById('user-id').value;
+        const itemId = parseInt(document.getElementById('item-id').value); // Get the itemId as an integer
+        const dataValue = document.getElementById('data-value').value;
+
+        console.log(`Updating for User: ${userId}, Date: ${itemId}, Class: ${dataValue}`);
+
+        // Update table
+        const table = document.getElementById('data-table');
+        const rows = table.rows;
+        
+        // Iterate through the rows of the table and update the relevant cells
+        for (let i = 1; i < rows.length; i++) { // Skip the header row
+            const cell = rows[i].cells[0]; // First column is user ID
+            if (cell.textContent === userId) {
+                const dataCell = rows[i].cells[itemId]; // Use itemId to target the correct cell
+                dataCell.textContent = dataValue;
+
+                // Apply color styling
+                if (['N1', 'P4', 'R'].includes(dataValue)) {
+                    dataCell.style.color = 'red';
+                } else if (dataValue === 'N9') {
+                    dataCell.style.color = 'greenyellow';
+                } else if (dataValue === 'N6') {
+                    dataCell.style.color = 'green';
+                } else {
+                    dataCell.style.color = ''; // Reset to default
+                }
+
+                // Log the entry in the log table with a timestamp
+                const logTable = document.getElementById('logBody');
+                const newLogEntry = document.createElement('tr');
+
+                // Get the current local timestamp (shortened)
+                const timestamp = new Date();
+                
+                // Format: 'MM/DD HH:MM'
+                const formattedTimestamp = `${timestamp.getMonth() + 1}/${timestamp.getDate()} ${timestamp.getHours()}:${timestamp.getMinutes() < 10 ? '0' : ''}${timestamp.getMinutes()}`;
+
+                // Insert the timestamp and other log details
+                newLogEntry.innerHTML = `
+                    <td>${formattedTimestamp}</td>
+                    <td>${userId}</td>
+                    <td>${itemId}</td>
+                    <td>${dataValue}</td>
+                    <td>
+                       <input type="password" class="passwordInput" placeholder="Enter password" />
+                       <button onclick="deleteLogEntry(this)">刪除</button>
+                    </td>
+                `;
+
+                logTable.appendChild(newLogEntry);
+                break; 
+            }
+        }
+    }
+  
+    // Modify the updateTable function to log new entries and show the delete button
+function updateTable() {
+    const userId = document.getElementById('user-id').value;
+    const itemId = parseInt(document.getElementById('item-id').value);
+    const dataValue = document.getElementById('data-value').value;
+
+    // Update table
+    const table = document.getElementById('data-table');
+    const rows = table.rows;
+
+    for (let i = 1; i < rows.length; i++) { // Skip the header row
+        const cell = rows[i].cells[0]; // First column is user ID
+        if (cell.textContent === userId) {
+            const dataCell = rows[i].cells[itemId]; // Target cell for the specific itemId
+            dataCell.textContent = dataValue;
+
+            // Apply color styling
+            if (['N1', 'P4', 'R'].includes(dataValue)) {
+                dataCell.style.color = 'red';
+            } else if (dataValue === 'N9') {
+                dataCell.style.color = 'greenyellow';
+            } else if (dataValue === 'N6') {
+                dataCell.style.color = 'green';
+            } else {
+                dataCell.style.color = ''; // Reset to default
+            }
+
+            // Log the entry in the log table with a timestamp
+            const logTable = document.getElementById('logBody');
+            const newLogEntry = document.createElement('tr');
+
+            // Get the current local timestamp (shortened)
+            const timestamp = new Date();
+            const formattedTimestamp = `${timestamp.getMonth() + 1}/${timestamp.getDate()} ${timestamp.getHours()}:${timestamp.getMinutes() < 10 ? '0' : ''}${timestamp.getMinutes()}`;
+
+            // Insert the timestamp and other log details
+            newLogEntry.innerHTML = `
+                <td>${formattedTimestamp}</td>
+                <td>${userId}</td>
+                <td>${itemId}</td>
+                <td>${dataValue}</td>
+                <td>
+                    <input type="password" class="passwordInput" placeholder="Enter password" />
+                    <button onclick="deleteLogEntry(this)">刪除</button>
+                </td>
+            `;
+
+            logTable.appendChild(newLogEntry);
+
+            // 保存 log-table 到 localStorage
+            saveLogToLocalStorage();
+            break; // No need to keep checking other rows once we find and update the correct one
+        }
+    }
+
+    // Optional: Save table state if needed (unrelated to log-table)
+    saveTableState();
+}
+
+// 儲存 log-table 到 localStorage
+function saveLogToLocalStorage() {
+    const logTable = document.getElementById('logBody');
+    const logEntries = [];
+
+    // 迭代 log-table 的每一行，儲存每條紀錄
+    const rows = logTable.rows;
+    for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.cells;
+
+        const logEntry = {
+            timestamp: cells[0].textContent,
+            userId: cells[1].textContent,
+            date: cells[2].textContent,
+            class: cells[3].textContent,
+        };
+
+        logEntries.push(logEntry);
+    }
+
+    // 存儲到 localStorage
+    localStorage.setItem('logEntries_month1', JSON.stringify(logEntries));
+}
+
+// Function to save the table data to localStorage
+function saveTableState() {
+    const table = document.getElementById('data-table');
+    const tableData = {
+        headers: [],
+        rows: []
+    };
+
+    // Save headers (first row)
+    const headerRow = table.rows[0];
+    for (let j = 0; j < headerRow.cells.length; j++) {
+        tableData.headers.push(headerRow.cells[j].textContent);
+    }
+
+    // Save data rows
+    for (let i = 1; i < table.rows.length; i++) {
+        const row = table.rows[i];
+        const rowData = [];
+        for (let j = 0; j < row.cells.length; j++) {
+            const cell = row.cells[j];
+            rowData.push({
+                content: cell.textContent,
+                color: cell.style.color || ''
+            });
+        }
+        tableData.rows.push(rowData);
+    }
+
+    // Use month-specific key for table data
+    localStorage.setItem('tableData_month1', JSON.stringify(tableData));
+}
+
+// Function to load the table data from localStorage
+function loadTableState() {
+    // Use month-specific key for table data
+    const savedData = localStorage.getItem('tableData_month1');
+    
+    if (!savedData || savedData === "null" || savedData === "undefined") {
+        saveTableState();
+        return;
+    }
+
+    try {
+        const tableData = JSON.parse(savedData);
+        const table = document.getElementById('data-table');
+
+        // Load data rows
+        for (let i = 1; i < table.rows.length; i++) {
+            const row = table.rows[i];
+            const rowData = tableData.rows[i - 1];
+            
+            if (rowData) {
+                for (let j = 0; j < row.cells.length; j++) {
+                    const cell = row.cells[j];
+                    const cellData = rowData[j];
+                    
+                    if (cellData) {
+                        if (j === 0) {
+                            cell.textContent = cell.textContent || cellData.content;
+                        } else {
+                            cell.textContent = cellData.content;
+                        }
+                        
+                        if (cellData.color) {
+                            cell.style.color = cellData.color;
+                        }
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error loading table state:', error);
+        saveTableState();
+    }
+}
+
+// Keep the window.onload handler as is
+window.onload = function() {
+    // First load the initial table state
+    const savedData = localStorage.getItem('tableData_month1');
+    if (!savedData || savedData === "null" || savedData === "undefined") {
+        // If no saved data, initialize localStorage with the current HTML table data
+        saveTableState();
+    } else {
+        // If there is saved data, load it
+        loadTableState();
+    }
+    
+    // Then load the log entries
+    loadLogFromLocalStorage();
+};
+
+// Function to handle log entry deletion with password verification
+function deleteLogEntry(button) {
+    // Find the closest <tr> element (the row of the log entry)
+    const row = button.closest('tr'); 
+
+    // Get the password input field from the same row
+    const passwordInput = row.querySelector('.passwordInput'); 
+
+    // Get the entered password
+    const enteredPassword = passwordInput.value.trim(); 
+
+    // Define the correct password
+    const correctPassword = 'pt'; 
+
+    // Debugging: Check the entered password
+    console.log("Entered Password: ", enteredPassword); 
+
+    // Validate the password
+    if (enteredPassword === correctPassword) {
+        // Remove the row if the password is correct
+        row.remove();
+    } else {
+        // Show an alert if the password is incorrect
+        alert('密碼不對,無法刪除');
+    }
+}
+    // 頁面加載時從 localStorage 加載 log-table
+function loadLogFromLocalStorage() {
+    // Use month-specific key for log entries
+    const logEntries = JSON.parse(localStorage.getItem('logEntries_month1'));
+
+    if (logEntries && Array.isArray(logEntries)) {
+        const logTable = document.getElementById('logBody');
+        logTable.innerHTML = '';
+
+        logEntries.forEach(entry => {
+            const newLogEntry = document.createElement('tr');
+            newLogEntry.innerHTML = `
+                <td>${entry.timestamp}</td>
+                <td>${entry.userId}</td>
+                <td>${entry.date}</td>
+                <td>${entry.class}</td>
+                <td>
+                    <input type="password" class="passwordInput" placeholder="Enter password" />
+                    <button onclick="deleteLogEntry(this)">刪除</button>
+                </td>
+            `;
+            logTable.appendChild(newLogEntry);
+        });
+    }
+}
+
+// 刪除 log-entry
+function deleteLogEntry(button) {
+    // 找到最接近的 <tr> 元素 (這是 log-entry 的行)
+    const row = button.closest('tr');
+
+    // 找到 log-table 中的所有紀錄
+    const logTable = document.getElementById('logBody');
+    const rows = logTable.rows;
+
+    // 取得該行的所有欄位
+    const timestamp = row.cells[0].textContent;
+    const userId = row.cells[1].textContent;
+    const date = row.cells[2].textContent;
+    const classValue = row.cells[3].textContent;
+
+    // 從 localStorage 中刪除該條紀錄
+    let logEntries = JSON.parse(localStorage.getItem('logEntries_month1')) || [];
+    logEntries = logEntries.filter(entry => {
+        return entry.timestamp !== timestamp || entry.userId !== userId || entry.date !== date || entry.class !== classValue;
+    });
+
+    // 更新 localStorage
+    localStorage.setItem('logEntries_month1', JSON.stringify(logEntries));
+
+    // 刪除該行
+    row.remove();
+}
+    </script>
+</body>
+</html>
+
